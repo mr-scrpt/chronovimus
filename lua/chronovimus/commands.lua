@@ -16,7 +16,7 @@ function M.setup()
 	end, {})
 
 	vim.api.nvim_create_user_command("HistoryList", function()
-		require("history_nav.telescope").show_history_in_telescope()
+		require("chronovimus.telescope").show_history_in_telescope()
 	end, {})
 
 	vim.keymap.set("n", "<leader>bp", ":HistoryBack<CR>", { silent = true })
