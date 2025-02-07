@@ -7,7 +7,7 @@ function M.show_history_in_telescope()
 	local action_state = require("telescope.actions.state")
 	local conf = require("telescope.config").values
 
-	local history = require("history_nav.history").get_history()
+	local history = require("chronovimus.history").get_history()
 	if #history == 0 then
 		print("История пуста")
 		return
