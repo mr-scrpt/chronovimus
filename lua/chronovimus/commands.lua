@@ -15,6 +15,10 @@ function M.setup()
 		history.debug_history()
 	end, {})
 
+	vim.api.nvim_create_user_command("HistoryList", function()
+		require("history_nav.telescope").show_history_in_telescope()
+	end, {})
+
 	vim.keymap.set("n", "<leader>bp", ":HistoryBack<CR>", { silent = true })
 	vim.keymap.set("n", "<leader>bn", ":HistoryForward<CR>", { silent = true })
 	vim.keymap.set("n", "<leader>bl", ":HistoryList<CR>", { silent = true })
