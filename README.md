@@ -15,6 +15,15 @@ Chronovimus addresses these issues by maintaining a full navigation history that
 - Keeps track of buffer transitions as a timeline.
 - Creates a branch when you open a new buffer from the middle of your history.
 - Removes duplicate entries to keep the history clean.
+- Provides an intuitive picker interface for visualizing and navigating your buffer history.
+
+## Features
+
+- **Smart History Management**: Maintains a complete timeline of your buffer navigation
+- **Branch Support**: Creates intelligent branches when opening new buffers from historical positions
+- **Deduplication**: Automatically removes duplicate entries to keep history clean
+- **Visual History Browser**: Uses snacks.nvim picker for an intuitive visual interface to browse and jump through your buffer history
+- **Clear Navigation**: Simple commands for moving backward and forward through your buffer history
 
 ## How It Works
 
@@ -25,28 +34,25 @@ Chronovimus builds a history stack based on the order in which files are opened.
 Consider a scenario with numbered files:
 
 1. **Open files in sequence:**
-
    - Open file **2** → History: `[2]`
    - Open file **3** → History: `[2, 3]`
    - Open file **4** → History: `[2, 3, 4]` _(current file: 4)_
-
 2. **Navigate backward:**
-
    - Press **HistoryBack** twice → Current file becomes **2**
-
 3. **Open a new file in the middle of history:**
    - While on file **2**, open file **5**  
      This creates a branch so that the history now becomes:
+
      ```
      Branch History: 5 → 2 → 3 → 4
      ```
+
 4. **Navigating:**
    - Pressing **HistoryBack** from file **5** follows the sequence:  
      **5** → **2** → **3** → **4**
    - Pressing **HistoryForward** reverses the order:  
      **4** → **3** → **2** → **5**
-
-This approach ensures that you always have a complete, deduplicated view of your navigation history.
+   - Using **HistoryList** opens a picker interface where you can visually browse and jump to any point in your history
 
 ## Installation
 
@@ -56,24 +62,25 @@ If you use [lazy.nvim](https://github.com/folke/lazy.nvim) as your package manag
 return {
   "mr-scrpt/chronovimus",
   dependencies = {
-    "nvim-telescope/telescope.nvim",
+    "folke/snacks.nvim",  -- Required for the picker interface
   },
+  lazy = false,  -- Important: ensures proper history tracking from startup
   keys = {
-    -- These keymaps will be used if you don't override them via setup
     { "<leader>bp", ":HistoryBack<CR>", desc = "History Back" },
     { "<leader>bn", ":HistoryForward<CR>", desc = "History Forward" },
     { "<leader>bl", ":HistoryList<CR>", desc = "History List" },
   },
   config = function()
     require("chronovimus").setup({
-      debug = true,
-      keys = {
-        { mode = "n", lhs = "<leader>bp", rhs = ":HistoryBack<CR>", opts = { silent = true, desc = "History Back" } },
-        { mode = "n", lhs = "<leader>bn", rhs = ":HistoryForward<CR>", opts = { silent = true, desc = "History Forward" } },
-        { mode = "n", lhs = "<leader>bl", rhs = ":HistoryList<CR>", opts = { silent = true, desc = "History List" } },
-      },
+      debug = true,  -- Optional: enables debug logging
     })
   end,
 }
-
 ```
+
+## Commands
+
+- `:HistoryBack` - Navigate backward through your buffer history
+- `:HistoryForward` - Navigate forward through your buffer history
+- `:HistoryList` - Open the picker interface to visualize and navigate your complete buffer history
+- `:HistoryDebug` - (Debug mode only) Display the current state of your buffer history
