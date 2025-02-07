@@ -38,6 +38,7 @@ function M.show_history_in_telescope()
 			}),
 			sorter = conf.generic_sorter({}),
 			default_selection_index = default_index, -- Устанавливаем выбранным активный файл
+			previewer = conf.file_previewer({}),
 			attach_mappings = function(prompt_bufnr, map)
 				local function open_selected()
 					local selection = action_state.get_selected_entry()
