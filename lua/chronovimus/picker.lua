@@ -16,13 +16,21 @@ function M.show_history_in_picker()
 		end
 	end
 
+	-- Преобразуем историю в формат, требуемый Picker
+	local items = {}
+	for _, path in ipairs(history) do
+		table.insert(items, {
+			text = path,
+			file = path,
+			value = path,
+		})
+	end
+
 	local snacks = require("snacks")
 	snacks.picker({
 		title = "History",
-		items = history,
-		format = function(item)
-			return { { item, "Normal" } }
-		end,
+		items = items,
+		format = "file",
 		preview = "file",
 		on_show = function(picker)
 			picker.list:view(default_index)
@@ -30,7 +38,7 @@ function M.show_history_in_picker()
 		confirm = function(picker, item)
 			if item then
 				picker:close()
-				vim.cmd("edit " .. vim.fn.fnameescape(item))
+				vim.cmd("edit " .. vim.fn.fnameescape(item.value))
 			end
 		end,
 		win = {
