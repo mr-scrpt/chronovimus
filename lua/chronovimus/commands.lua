@@ -2,7 +2,10 @@ local history = require("chronovimus.history")
 
 local M = {}
 
-function M.setup()
+function M.setup(opts)
+	opts = opts or {}
+
+	-- Создаем пользовательские команды, как и раньше
 	vim.api.nvim_create_user_command("HistoryBack", function()
 		history.navigate_back()
 	end, {})
@@ -19,9 +22,28 @@ function M.setup()
 		require("chronovimus.telescope").show_history_in_telescope()
 	end, {})
 
-	vim.keymap.set("n", "<leader>bp", ":HistoryBack<CR>", { silent = true })
-	vim.keymap.set("n", "<leader>bn", ":HistoryForward<CR>", { silent = true })
-	vim.keymap.set("n", "<leader>bl", ":HistoryList<CR>", { silent = true })
+	-- Определяем маппинги по умолчанию
+	local default_keys = {
+		{ mode = "n", lhs = "<leader>bp", rhs = ":HistoryBack<CR>", opts = { silent = true, desc = "History Back" } },
+		{
+			mode = "n",
+			lhs = "<leader>bn",
+			rhs = ":HistoryForward<CR>",
+			opts = { silent = true, desc = "History Forward" },
+		},
+		{ mode = "n", lhs = "<leader>bl", rhs = ":HistoryList<CR>", opts = { silent = true, desc = "History List" } },
+	}
+
+	-- Если в конфигурации переданы собственные маппинги, используем их, иначе — значения по умолчанию
+	local keymaps = opts.keys or default_keys
+
+	for _, mapping in ipairs(keymaps) do
+		local mode = mapping.mode or "n"
+		local lhs = mapping.lhs or mapping[1]
+		local rhs = mapping.rhs or mapping[2]
+		local keyopts = mapping.opts or {}
+		vim.keymap.set(mode, lhs, rhs, keyopts)
+	end
 end
 
 return M

@@ -4,9 +4,9 @@ local commands = require("chronovimus.commands")
 local M = {}
 
 function M.setup(opts)
-  opts = opts or {}
-  history.setup(opts)
-  commands.setup()
+	opts = opts or {}
+	history.setup(opts)
+	commands.setup(opts)
 end
 
 return M
